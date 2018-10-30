@@ -1,0 +1,38 @@
+Add these functions:
+# Taken from http://www.nikse.dk/SubtitleEdit
+
+ - Remove empty lines
+
+ - Remove unneeded spaces
+
+ - Remove unneeded periods
+	!. ?.
+
+ - Fix missing spaces
+ 	after . , :(but not time; 12:30)
+
+ - Fix uppercase I in lowercase words where l should be
+
+ - Replace double apostrophe '' with quotes "
+
+ - Add period when next line starts with uppercase letter
+
+ - Start with uppercase when previous line ended with :
+
+ - Add missing quotes
+ 	"Starts with quote but doesn't end, or vice versa
+
+ - Add hyphen when there are two lines and one starts with one
+ 	# - First lines does, which indicates dialogue.
+ 	# Second one doesn't, but should.
+
+ - Replace -- with ...
+ 	Cut off sentences often end with --, I prefer ...
+
+ - Remove leading ...
+ 	Probably only when previous line ended with ...
+
+ - Replace alone lowercase i with uppercase I
+
+ - Fix some common English OCR errors
+ 	[!] See SubtitleEdit/Dictionaires/eng_OCRFixReplaceList.xml
