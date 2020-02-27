@@ -16,11 +16,11 @@ class Cleaner:
 
     def clean(self, line):
         re_patterns = self.regexer.regexes
-        for pattern in re_patterns.keys():
-            match = re.search(re_patterns[pattern], line["text"])
+        for p in re_patterns.keys():
+            match = re.search(re_patterns[p], line["text"])
             if match is not None:
                 LOGGER.warning("Found match with pattern: %s\n%s\n%s\n",
-                               pattern, line["text"], match.groups()
+                               p, line["text"], match.groups()
                                )
 
     class Regexer:
@@ -28,12 +28,16 @@ class Cleaner:
 
         def __init__(self):
             # TODO: finetune these regexes, maybe some can be combined?
-            # TODO: maybe add regex for situation like: haven 't
+            #  maybe add regex for situation like: haven 't
+            #  and single lowercase i to upper
             self.regexes = {'double_space': re.compile(r"([^\S\n]){2,}"),
                             'space_before_punct': re.compile(r"[^\S\n]+([.,:;!?])"),
                             'dot_after_punct': re.compile(r"([:!?])+([.,]+)"),
-                            'no_space_after_punct': re.compile(r"[\w\d]+([.,:;!?])[\w\d]+"),
+                            'no_space_after_punct': re.compile(r"([.,:;!?])[\w]+"),
                             'lower_l_not_cap_i': re.compile(r"\w+([I])\w+"),
                             'double_apostrophe': re.compile(r"([']{2})"),
                             'one_line_dialogue': re.compile(r"(^[-].+[.])[^\n]([-].+)"),
                             'missing_dialogue_line': re.compile(r"(^[-].+)[\n]([^-].+)")}
+
+        def replace(self):
+            pass

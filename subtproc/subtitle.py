@@ -18,7 +18,7 @@ class Input:
     def __init__(self, sub, enc):
         self.subtitle = sub
         self.encoding = enc
-        self.subtitle_exts = ("srt", "ssa", "ass")
+        self.subtitle_exts = ["srt", "ssa", "ass"]
         self.sub_contents = {}
         self.check()
 
@@ -69,7 +69,7 @@ class Input:
             LOGGER.warning("%s", error)
             sys.exit()
 
-        LOGGER.debug("\"%s\" succesfully parsed!", self.subtitle)
+        LOGGER.debug("Subtitle \"%s\" succesfully parsed!", self.subtitle)
         return self.sub_contents
 
 

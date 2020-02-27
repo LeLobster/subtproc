@@ -13,11 +13,14 @@ cd ../subtproc/subtproc || exit
 if [ "$1" = "--yeslint" ]; then
     pylint ./*.py
 else
-    echo -e "\nIf you want to include pylint run make linttest"
+    echo -e "\nIf you want to include pylint run 'make linttest'"
 fi
 
-printy "help"
-./main.py --help
+#printy "help"
+#./main.py --help
+#
+#printy "version"
+#./main.py --version
 
 for c in $codecs; do
   printy "with codec: $c"
