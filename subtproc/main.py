@@ -29,7 +29,7 @@ def logger_init(level: str):
     return logger
 
 
-class AppSetup:
+class AppInit:
     """ some app setup pre processing of sub """
 
     def __init__(self, name: str, version: float):
@@ -55,9 +55,9 @@ class AppSetup:
                 description="Automatically process subtitles",
                 allow_abbrev=False)
             self.group = self.parser.add_mutually_exclusive_group()
-            self.setup_args(name, version)
+            self.setup(name, version)
 
-        def setup_args(self, name: str, version: float):
+        def setup(self, name: str, version: float):
             """ Setup argparse arguments """
             self.parser.add_argument("file",
                                      action="store", type=str,
@@ -79,7 +79,7 @@ class AppSetup:
             self.parser.add_argument("--version", action="version",
                                      version=f"{name} version {version}")
 
-        def process_args(self):
+        def parse(self):
             """
             parse_args() returns a Namespace which is not iterable
             vars() returns the Namespace object as a dict
@@ -93,29 +93,41 @@ class AppSetup:
             return args
 
     class ConfigParse:
-        def __init__(self, conf):
-            self.config = configparser.ConfigParser()
-            self.config['DEFAULT'] = {
+        def __init__(self, conf: str):
+            self.config = configparser.ConfigParser(
+                empty_lines_in_values=False
+            )
+            self.config['general'] = {
                 'blacklist': 'None'
             }
-            self.config_file = conf
+            self.config_file = self.validate(conf)
 
-        def validate(self):
+        @staticmethod
+        def validate(conf):
             """ See if the config file exists """
-            # TODO: make sure config file opts are overwritten by cmd args
-            if not os.path.exists(self.config_file):
-                LOGGER.debug("No config file present, ignoring")
+            if os.path.exists(conf):
+                LOGGER.debug("Parsing config: %s", conf)
+                return conf
             else:
-                LOGGER.debug("Parsing user config")
+                LOGGER.debug("No config file, moving on")
+                return None
+
+        def parse(self):
+            if self.config_file is not None:
+                self.config.read(self.config_file)
+                LOGGER.debug(self.config['general'])
+                LOGGER.debug(self.config['directories'])
+                return self.config_file
 
 
 def main():
     """ Main function. """
-    app = AppSetup("subtproc", 0.15)
+    app = AppInit("subtproc", 0.15)
     for key, value in app.__dict__.items():
         LOGGER.debug("[app] %s: %s", key, value)
-    args = app.ArgParse(app.name, app.version).process_args()
-    conf = app.ConfigParse(app.CONF_FILE).validate()
+    # TODO: make sure config file opts are overwritten by cmd args
+    args = app.ArgParse(app.name, app.version).parse()
+    conf = app.ConfigParse(app.CONF_FILE).parse()
 
     # file_handle = subtitle.Input(args["file"], args["encoding"])
     # file_original = file_handle.read()
