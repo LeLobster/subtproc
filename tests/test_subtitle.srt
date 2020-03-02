@@ -114,3 +114,7 @@ How long have I got?
 00:27:05,374 --> 00:27:07,843
 Your flight leaves
 in an hour and 10 minutes.
+
+16
+00:27:08,864 --> 00:27:09,971
+991
