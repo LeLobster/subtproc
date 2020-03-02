@@ -18,3 +18,6 @@ test:
 
 linttest:
 	./tests/run.sh --yeslint
+
+testall:
+	./test.run.sh --yeslint --testall

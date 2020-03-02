@@ -11,24 +11,35 @@ function printy() {
 cd ../subtproc/subtproc || exit
 
 if [ "$1" = "--yeslint" ]; then
-    pylint ./*.py
+  shift
+  pylint ./*.py
 else
-    echo -e "\nIf you want to include pylint run 'make linttest'"
+  echo -e "\nIf you want to include pylint run 'make linttest'"
 fi
 
-#printy "help"
-#./main.py --help
-#
-#printy "version"
-#./main.py --version
+if [ "$1" = "--testall" ]; then
+  testall
+else
+  echo -e "execute with --testall to run all tests"
+  printy "with codec: default"
+  ./main.py ../tests/test_subtitle.srt
+fi
 
-for c in $codecs; do
-  printy "with codec: $c"
-  ./main.py ../tests/test_subtitle.srt -e "$c"
-done
+function testall() {
+  printy "help"
+  ./main.py --help
 
-printy "Unsupported Subtitle"
-./main.py ../tests/unsupported_subtitle.txt -e ascii
+  printy "version"
+  ./main.py --version
 
-printy "Nonexistent file"
-./main.py ../tests/nonexistent_subtitle.srt
+  for c in $codecs; do
+    printy "with codec: $c"
+    ./main.py ../tests/test_subtitle.srt -e "$c"
+  done
+
+  printy "Unsupported Subtitle"
+  ./main.py ../tests/unsupported_subtitle.txt -e ascii
+
+  printy "Nonexistent file"
+  ./main.py ../tests/nonexistent_subtitle.srt
+}
