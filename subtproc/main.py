@@ -30,6 +30,7 @@ def logger_init(level: str):
 
 
 class AppInit:
+    # pylint: disable=too-few-public-methods
     """ some app setup pre processing of sub """
 
     def __init__(self, name: str, version: float):
@@ -93,12 +94,18 @@ class AppInit:
             return args
 
     class ConfigParse:
+        """ https://docs.python.org/3/library/configparser.html """
+
         def __init__(self, conf: str):
             self.config = configparser.ConfigParser(
                 empty_lines_in_values=False
             )
-            self.config['general'] = {
-                'blacklist': 'None'
+            # TODO: check which additional options well include in user config
+            self.config['blacklist'] = {
+                'rules': []
+            }
+            self.config['extra'] = {
+                'rules': {}
             }
             self.config_file = self.validate(conf)
 
@@ -106,18 +113,24 @@ class AppInit:
         def validate(conf):
             """ See if the config file exists """
             if os.path.exists(conf):
-                LOGGER.debug("Parsing config: %s", conf)
+                LOGGER.debug("[conf] Parsing config: %s", conf)
                 return conf
-            else:
-                LOGGER.debug("No config file, moving on")
-                return None
+            LOGGER.debug("[conf] No user config, using defaults")
+            return None
 
-        def parse(self):
+        def parse(self) -> dict:
+            """ parse the config file """
             if self.config_file is not None:
                 self.config.read(self.config_file)
-                LOGGER.debug(self.config['general'])
-                LOGGER.debug(self.config['directories'])
-                return self.config_file
+
+            self.config_file = {
+                option: dict(self.config.items(option)) for option in self.config.sections()
+            }
+
+            for key, value in self.config_file.items():
+                LOGGER.debug("[conf] %s: %s", key, value)
+
+            return self.config_file
 
 
 def main():
@@ -125,7 +138,7 @@ def main():
     app = AppInit("subtproc", 0.15)
     for key, value in app.__dict__.items():
         LOGGER.debug("[app] %s: %s", key, value)
-    # TODO: make sure config file opts are overwritten by cmd args
+    # TODO: make sure config file opts are overwritten by cmd args if needed
     args = app.ArgParse(app.name, app.version).parse()
     conf = app.ConfigParse(app.CONF_FILE).parse()
 
