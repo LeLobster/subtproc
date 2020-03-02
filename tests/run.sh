@@ -8,23 +8,6 @@ function printy() {
   echo "======================================="
 }
 
-cd ../subtproc/subtproc || exit
-
-if [ "$1" = "--yeslint" ]; then
-  shift
-  pylint ./*.py
-else
-  echo -e "\nIf you want to include pylint run 'make linttest'"
-fi
-
-if [ "$1" = "--testall" ]; then
-  testall
-else
-  echo -e "execute with --testall to run all tests"
-  printy "with codec: default"
-  ./main.py ../tests/test_subtitle.srt
-fi
-
 function testall() {
   printy "help"
   ./main.py --help
@@ -43,3 +26,20 @@ function testall() {
   printy "Nonexistent file"
   ./main.py ../tests/nonexistent_subtitle.srt
 }
+
+cd ../subtproc/subtproc || exit
+
+if [ "$1" = "--yeslint" ]; then
+  shift
+  pylint ./*.py
+else
+  echo -e "\nIf you want to include pylint run 'make linttest'"
+fi
+
+if [ "$1" = "--testall" ]; then
+  testall
+else
+  echo -e "execute with --testall to run all tests"
+  printy "with codec: default"
+  ./main.py ../tests/test_subtitle.srt
+fi

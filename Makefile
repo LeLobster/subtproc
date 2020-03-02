@@ -20,4 +20,4 @@ linttest:
 	./tests/run.sh --yeslint
 
 testall:
-	./test.run.sh --yeslint --testall
+	./tests/run.sh --yeslint --testall
