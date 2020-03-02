@@ -10,6 +10,8 @@ import logging
 import os
 import platform
 
+import subtitle
+
 
 def logger_init(level: str):
     """ Initialize the logger """
@@ -25,7 +27,7 @@ def logger_init(level: str):
         '[%(levelname)s] %(message)s'
     ))
     logger.addHandler(stream)
-    logger.debug("Logger initialized with loglevel: %s", level)
+    logger.debug("[log] Logger initialized with loglevel: %s", level)
     return logger
 
 
@@ -80,7 +82,7 @@ class AppInit:
             self.parser.add_argument("--version", action="version",
                                      version=f"{name} version {version}")
 
-        def parse(self):
+        def parse(self) -> dict:
             """
             parse_args() returns a Namespace which is not iterable
             vars() returns the Namespace object as a dict
@@ -113,7 +115,7 @@ class AppInit:
         def validate(conf):
             """ See if the config file exists """
             if os.path.exists(conf):
-                LOGGER.debug("[conf] Parsing config: %s", conf)
+                LOGGER.debug("[conf] Parsing user config: %s", conf)
                 return conf
             LOGGER.debug("[conf] No user config, using defaults")
             return None
@@ -142,8 +144,8 @@ def main():
     args = app.ArgParse(app.name, app.version).parse()
     conf = app.ConfigParse(app.CONF_FILE).parse()
 
-    # file_handle = subtitle.Input(args["file"], args["encoding"])
-    # file_original = file_handle.read()
+    file_handle = subtitle.Input(args["file"], args["encoding"])
+    file_original = file_handle.parse()
     # file_cleaned = subtitle.Process(file_original)
 
 
