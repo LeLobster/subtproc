@@ -4,6 +4,7 @@ This module handles the reading and writing of a subtitle file
 
 import logging
 import os
+import re
 import sys
 
 LOGGER = logging.getLogger("subtproc")
@@ -74,8 +75,6 @@ class Processor:
         """ Defines the different regexes and related functions """
 
         def __init__(self):
-            import re
-
             # TODO: finetune these regexes, maybe some can be combined?
             #  look at todo.txt to see what other rules should be added
             # TODO: also figure out how we actually want to structure the replacement method
