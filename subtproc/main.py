@@ -102,7 +102,7 @@ class AppInit:
             self.config = configparser.ConfigParser(
                 empty_lines_in_values=False
             )
-            # TODO: check which additional options well include in user config
+            # TODO: check which additional options we'll include in user config
             self.config['blacklist'] = {
                 'rules': []
             }
@@ -144,8 +144,7 @@ def main():
     args = app.ArgParse(app.name, app.version).parse()
     conf = app.ConfigParse(app.CONF_FILE).parse()
 
-    file_handle = subtitle.Input(args["file"], args["encoding"])
-    file_original = file_handle.parse()
+    file_original = subtitle.Input(args["file"], args["encoding"]).parse()
     # file_cleaned = subtitle.Process(file_original)
 
 

@@ -39,23 +39,22 @@ class Input:
         try:
             with open(self.subtitle, "r", encoding=self.encoding) as sub_obj:
                 sub_list = sub_obj.read().split("\n\n")
-
-            for sub in sub_list:
-                sub_split = sub.split('\n')
-                self.sub_contents[int(sub_split[0])] = {
-                    'time': sub_split[1], 'text': "\n".join(sub_split[2:])
-                }
-
         except (UnicodeDecodeError, UnicodeError, LookupError) as error:
-            LOGGER.warning("%s", error)
+            LOGGER.error("%s", error)
             sys.exit()
+
+        for sub in sub_list:
+            sub_split = sub.split('\n')
+            self.sub_contents[int(sub_split[0])] = {
+                'time': sub_split[1], 'text': "\n".join(sub_split[2:])
+            }
 
         LOGGER.debug("Subtitle \"%s\" succesfully parsed!", self.subtitle)
         return self.sub_contents
 
 
 class Process:
-    """docstring for Process."""
+    """ docstring for Process. """
 
     def __init__(self, sub):
         self.subtitle = sub
@@ -66,7 +65,7 @@ class Process:
 
 
 class Output:
-    """docstring for Output."""
+    """ docstring for Output. """
 
     def __init__(self, arg):
         self.arg = arg
