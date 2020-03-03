@@ -145,7 +145,8 @@ def main():
     conf = app.ConfigParse(app.CONF_FILE).parse()
 
     file_original = subtitle.Input(args["file"], args["encoding"]).parse()
-    # file_cleaned = subtitle.Process(file_original)
+    processor = subtitle.Processor()
+    processor.clean(file_original)
 
 
 if __name__ == "__main__":
