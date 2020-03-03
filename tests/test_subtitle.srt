@@ -115,6 +115,6 @@ How long have I got?
 Your flight leaves
 in an hour and 10 minutes.
 
-16
+26
 00:27:08,864 --> 00:27:09,971
 991
