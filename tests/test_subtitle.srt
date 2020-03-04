@@ -80,8 +80,8 @@ please state in the following order:</i>
 
 18
 00:26:32,591 --> 00:26:36,687
-<i>Your destination,
-your nationality and your full name.</i>
+<i>Your   destination,
+your nationality  and your full name.</i>
 
 19
 00:26:36,929 --> 00:26:39,728
@@ -94,7 +94,7 @@ Moon. American. Floyd, Heywood R.
 
 21
 00:26:48,232 --> 00:26:51,782
-<i>Thank you. You are cleared through
+<i>Thank you . You are cleared through
 Voiceprint Identification.</i>
 
 22
@@ -118,3 +118,11 @@ in an hour and 10 minutes.
 26
 00:27:08,864 --> 00:27:09,971
 991
+
+27
+00:28:12,344 --> 00:28:14,408
+"This is a random quote".
+
+28
+00:30:00,012 --> 00:31:16,944
+Should i , or should i not?
