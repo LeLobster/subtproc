@@ -103,8 +103,8 @@ Thank you.
 
 23
 00:27:00,744 --> 00:27:03,918
-- Have i got time for breakfast?.
-I think we can manage that.
+Have i got time for breakfast?.
+- I think we can manage that.
 
 24
 00:27:04,123 --> 00:27:05,170
