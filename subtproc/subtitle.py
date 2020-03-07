@@ -6,6 +6,7 @@ import os
 import re
 import sys
 
+# noinspection PyUnresolvedReferences
 from version import __app__
 
 
@@ -128,7 +129,7 @@ class Processor:
                 # REPLACES: with group 1
                 # a single lowercase i followed by a space or puncuation is converted to uppercase
                 'single_upper_i_not_lower':
-                    {'pattern': re.compile(r"[i]([^\S\n]+|[,.?!]{1})"), 'repl': r"I\g<1>"},
+                    {'pattern': re.compile(r"\b[i]([^\S\n]+|[,.?!]{1})"), 'repl': r"I\g<1>"},
                 # @double_apostrophe
                 # MATCHES: two apostrophes
                 # REPLACES: with a single quotation mark
