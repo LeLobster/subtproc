@@ -10,21 +10,21 @@ function printy() {
 
 function testall() {
   printy "help"
-  ./main.py --help
+  python3 ../subtproc --help
 
   printy "version"
-  ./main.py --version
+  python3 ../subtproc --version
 
   for c in $codecs; do
     printy "with codec: $c"
-    ./main.py ../tests/test_subtitle.srt -e "$c"
+    python3 ../subtproc ../tests/test_subtitle.srt -e "$c"
   done
 
   printy "Unsupported Subtitle"
-  ./main.py ../tests/unsupported_subtitle.txt -e ascii
+  python3 ../subtproc ../tests/unsupported_subtitle.txt -e ascii
 
   printy "Nonexistent file"
-  ./main.py ../tests/nonexistent_subtitle.srt
+  python3 ../subtproc ../tests/nonexistent_subtitle.srt
 }
 
 cd ../subtproc/subtproc || exit
@@ -41,5 +41,5 @@ if [ "$1" = "--testall" ]; then
 else
   echo -e "execute with --testall to run all tests"
   printy "with codec: default"
-  ./main.py ../tests/test_subtitle.srt
+  python3 ../subtproc ../tests/test_subtitle.srt
 fi
