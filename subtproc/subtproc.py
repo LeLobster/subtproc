@@ -11,6 +11,7 @@ import os
 import platform
 
 import subtitle
+# noinspection PyUnresolvedReferences
 from version import (__app__, __version__)
 
 
