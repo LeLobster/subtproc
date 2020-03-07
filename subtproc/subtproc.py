@@ -157,7 +157,3 @@ def main():
     file_original = subtitle.Input(args["file"], args["encoding"]).parse()
     processor = subtitle.Processor()
     processor.clean(file_original)
-
-
-if __name__ == "__main__":
-    main()
