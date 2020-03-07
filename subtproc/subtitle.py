@@ -6,13 +6,14 @@ import os
 import re
 import sys
 
-LOGGER = logging.getLogger("subtproc")
+from version import __app__
 
 
 class Input:
     """ Input """
 
     def __init__(self, file: str, enc: str):
+        self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
         self.subtitle = file
         self.encoding = enc
         # TODO: look at what has to be changed to support ssa and ass
@@ -23,12 +24,12 @@ class Input:
     def validate(self) -> str:
         """ Validate the provided file """
         if not os.path.isfile(self.subtitle):
-            LOGGER.error("%s not found!", self.subtitle)
+            self.logger.error("%s not found!", self.subtitle)
             sys.exit()
         else:
             ext = os.path.splitext(self.subtitle)[-1].lstrip(".")
             if ext not in self.supported_exts:
-                LOGGER.warning("%s extension is not supported!", ext)
+                self.logger.warning("%s extension is not supported!", ext)
                 sys.exit()
         return self.subtitle
 
@@ -38,7 +39,7 @@ class Input:
             with open(self.subtitle, "r", encoding=self.encoding) as sub_obj:
                 sub_list = sub_obj.read().split("\n\n")
         except (UnicodeDecodeError, UnicodeError, LookupError) as error:
-            LOGGER.error("%s", error)
+            self.logger.error("%s", error)
             sys.exit()
 
         for sub in sub_list:
@@ -48,7 +49,7 @@ class Input:
                 'text': "\n".join(sub_split[2:])
             }
 
-        LOGGER.info("Subtitle \"%s\" succesfully parsed!", self.subtitle)
+        self.logger.info("Subtitle \"%s\" succesfully parsed!", self.subtitle)
         return self.sub_contents
 
 
@@ -56,13 +57,14 @@ class Processor:
     """ docstring for Process. """
 
     def __init__(self):
+        self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
         self.regex = self.Regexer()
 
     def clean(self, subtitle: dict) -> dict:
         """ Clean """
         for line in subtitle.keys():
             line_current = subtitle[line]["text"]
-            LOGGER.debug("Checking line %s:\n\t%s", line, line_current.replace("\n", "\\n"))
+            self.logger.debug("Checking line %s:\n\t%s", line, line_current.replace("\n", "\\n"))
             for pattern in self.regex.patterns:
                 match_obj = self.regex.match(pattern, line_current)
                 if match_obj:
@@ -80,6 +82,7 @@ class Processor:
         """ Defines the different regexes and related functions """
 
         def __init__(self):
+            self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
             # TODO: finetune these regexes, maybe some can be combined?
             #  look at todo.txt to see what other rules should be added
             """
@@ -158,7 +161,7 @@ class Processor:
         def replace(self, rule: str, sub: str) -> str:
             """ Replace matching rule with sub """
             sub = re.sub(self.patterns[rule]['pattern'], self.patterns[rule]['repl'], sub)
-            LOGGER.debug("Matched on rule: %s, new line is:\n\t%s", rule, sub.replace("\n", "\\n"))
+            self.logger.debug("Matched on rule: %s, new line is:\n\t%s", rule, sub.replace("\n", "\\n"))
             return sub
 
 
@@ -167,6 +170,7 @@ class Output:
 
     # TODO: probably a temp file first and then backup and replace the original
     def __init__(self, arg):
+        self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
         self.arg = arg
 
     def write(self):
