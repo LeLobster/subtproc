@@ -11,24 +11,7 @@ import os
 import platform
 
 import subtitle
-
-
-def logger_init(level: str):
-    """ Initialize the logger """
-    logger = logging.getLogger("subtproc")
-    stream = logging.StreamHandler()
-    log_levels = {
-        "critical": logging.CRITICAL, "error": logging.ERROR,
-        "warning": logging.WARNING, "info": logging.INFO,
-        "debug": logging.DEBUG, "notset": logging.NOTSET
-    }
-    logger.setLevel(log_levels.get(level, "notset"))
-    stream.setFormatter(logging.Formatter(
-        '[%(levelname)s] %(message)s'
-    ))
-    logger.addHandler(stream)
-    logger.debug("[log] Logger initialized with loglevel: %s", level)
-    return logger
+from version import (__app__, __version__)
 
 
 class AppInit:
@@ -49,10 +32,35 @@ class AppInit:
         )
         self.CONF_FILE = os.path.join(self.CONF_DIR, f"{self.name}.conf")
 
+    class Logger:
+        """ https://docs.python.org/3/library/logging.html """
+
+        def __init__(self, name):
+            # pass
+            self.name = name
+            self.levels = {
+                "critical": logging.CRITICAL, "error": logging.ERROR,
+                "warning": logging.WARNING, "info": logging.INFO,
+                "debug": logging.DEBUG, "notset": logging.NOTSET
+            }
+            self.formatter = logging.Formatter(
+                '[%(levelname)s] [%(name)s] %(message)s'
+            )
+
+        def create(self, level: str):
+            logger = logging.getLogger(self.name)
+            stream = logging.StreamHandler()
+            stream.setFormatter(self.formatter)
+            logger.setLevel(self.levels.get(level, "notset"))
+            logger.addHandler(stream)
+            logger.debug("Initialized with loglevel: %s", level)
+            return logger
+
     class ArgParse:
         """ https://docs.python.org/3/library/argparse.html """
 
         def __init__(self, name: str, version: float):
+            self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
             self.parser = argparse.ArgumentParser(
                 prog=name,
                 description="Automatically process subtitles",
@@ -91,7 +99,7 @@ class AppInit:
 
             # TODO: Let user set log level via cmdline
             for key, value in args.items():
-                LOGGER.debug("[args] %s: %s", key, value)
+                self.logger.debug("%s: %s", key, value)
 
             return args
 
@@ -99,25 +107,25 @@ class AppInit:
         """ https://docs.python.org/3/library/configparser.html """
 
         def __init__(self, conf: str):
+            self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
             self.config = configparser.ConfigParser(
                 empty_lines_in_values=False
             )
             # TODO: check which additional options we'll include in user config
-            self.config['blacklist'] = {
-                'rules': []
+            self.config["blacklist"] = {
+                "rules": []
             }
-            self.config['extra'] = {
-                'rules': {}
+            self.config["extra"] = {
+                "rules": {}
             }
             self.config_file = self.validate(conf)
 
-        @staticmethod
-        def validate(conf):
+        def validate(self, conf):
             """ See if the config file exists """
             if os.path.exists(conf):
-                LOGGER.debug("[conf] Parsing user config: %s", conf)
+                self.logger.debug("Parsing user config: %s", conf)
                 return conf
-            LOGGER.debug("[conf] No user config, using defaults")
+            self.logger.debug("No user config, using defaults")
             return None
 
         def parse(self) -> dict:
@@ -130,16 +138,17 @@ class AppInit:
             }
 
             for key, value in self.config_file.items():
-                LOGGER.debug("[conf] %s: %s", key, value)
+                self.logger.debug("%s: %s", key, value)
 
             return self.config_file
 
 
 def main():
     """ Main function. """
-    app = AppInit("subtproc", 0.15)
+    app = AppInit(__app__, __version__)
+    logger = app.Logger(__app__).create("debug")
     for key, value in app.__dict__.items():
-        LOGGER.debug("[app] %s: %s", key, value)
+        logger.debug("%s: %s", key, value)
     # TODO: make sure config file opts are overwritten by cmd args if needed
     args = app.ArgParse(app.name, app.version).parse()
     conf = app.ConfigParse(app.CONF_FILE).parse()
@@ -150,5 +159,4 @@ def main():
 
 
 if __name__ == "__main__":
-    LOGGER = logger_init("debug")
     main()
