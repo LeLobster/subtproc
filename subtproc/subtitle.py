@@ -45,6 +45,14 @@ class Input:
 
         for sub in sub_list:
             sub_split = sub.split('\n')
+
+            # TODO: properly handle sub with empty lines
+            self.logger.debug("%s", sub_split)
+            # if len(sub_split) == 2:
+            #     pass
+            if not sub_split[0]:
+                sub_split = list(filter(None, sub_split))
+
             self.sub_contents[int(sub_split[0])] = {
                 'time': sub_split[1].split(' --> '),
                 'text': "\n".join(sub_split[2:])
@@ -111,12 +119,12 @@ class Processor:
                 'dot_after_punct':
                     {'pattern': re.compile(r"([\"':;!?%$])[.,]"), 'repl': r"\g<1>"},
                 # @no_space_after_punct
-                # MATCHES: any char from the first set, followed by 1 or more word char
+                # MATCHES: any except dot, any char from the second set, followed by 1 or more word char
                 # REPLACES: with group 1, a space, and then group 2
                 # adds a whitespace after punctuation marks
                 # note: we don't include ['"] here because ('n|"n) are valid
                 'no_space_after_punct':
-                    {'pattern': re.compile(r"([.,:;!?%$])([\w]+)"), 'repl': r"\g<1> \g<2>"},
+                    {'pattern': re.compile(r"([^.][.,:;!?%$])([\w]+)"), 'repl': r"\g<1> \g<2>"},
                 # @lower_l_not_upper_i
                 # MATCHES: zero or one of uppercase, one or more of lowercase,
                 #   one uppercase I, and one or more of lowercase
