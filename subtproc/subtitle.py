@@ -34,7 +34,6 @@ class Input:
                 sys.exit()
         return self.subtitle
 
-    @property
     def parse(self) -> dict:
         """
         Store subtitle information in a dict

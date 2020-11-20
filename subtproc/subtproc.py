@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 """
 Main
 """
@@ -37,7 +35,7 @@ class AppInit:
         """ https://docs.python.org/3/library/logging.html """
 
         def __init__(self, name):
-            # pass
+            """ initialize some logger values """
             self.name = name
             self.levels = {
                 "critical": logging.CRITICAL, "error": logging.ERROR,
@@ -45,10 +43,11 @@ class AppInit:
                 "debug": logging.DEBUG, "notset": logging.NOTSET
             }
             self.formatter = logging.Formatter(
-                '[%(levelname)s] [%(name)s] %(message)s'
+                "[%(levelname)s] [%(name)s] %(message)s"
             )
 
         def create(self, level: str):
+            """ create a new logger instance """
             logger = logging.getLogger(self.name)
             stream = logging.StreamHandler()
             stream.setFormatter(self.formatter)
