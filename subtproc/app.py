@@ -9,8 +9,7 @@ import os
 import platform
 
 import subtitle
-# noinspection PyUnresolvedReferences
-from version import (__app__, __version__)
+from __version__ import __name__, __version__
 
 
 class AppInit:
@@ -60,7 +59,7 @@ class AppInit:
         """ https://docs.python.org/3/library/argparse.html """
 
         def __init__(self, name: str, version: float):
-            self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
+            self.logger = logging.getLogger(__name__).getChild(f"{self.__class__.__name__}")
             self.parser = argparse.ArgumentParser(
                 prog=name,
                 description="Automatically process subtitles",
@@ -107,7 +106,7 @@ class AppInit:
         """ https://docs.python.org/3/library/configparser.html """
 
         def __init__(self, conf: str):
-            self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
+            self.logger = logging.getLogger(__name__).getChild(f"{self.__class__.__name__}")
             self.config = configparser.ConfigParser(
                 empty_lines_in_values=False
             )
@@ -143,10 +142,10 @@ class AppInit:
             return self.config_file
 
 
-def main():
+def run():
     """ Main function. """
-    app = AppInit(__app__, __version__)
-    logger = app.Logger(__app__).create("debug")
+    app = AppInit(__name__, __version__)
+    logger = app.Logger(app.name).create("debug")
     for key, value in app.__dict__.items():
         logger.debug("%s: %s", key, value)
     # TODO: make sure config file opts are overwritten by cmd args if needed

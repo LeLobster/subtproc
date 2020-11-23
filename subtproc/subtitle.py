@@ -1,20 +1,20 @@
 """
 This module handles the reading and writing of a subtitle file
 """
+
 import logging
 import os
 import re
 import sys
 
-# noinspection PyUnresolvedReferences
-from version import __app__
+from __version__ import __name__
 
 
 class Input:
     """ Input """
 
     def __init__(self, file: str, enc: str):
-        self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
+        self.logger = logging.getLogger(__name__).getChild(f"{self.__class__.__name__}")
         self.subtitle = file
         self.encoding = enc
         # TODO: look at what has to be changed to support ssa and ass
@@ -75,7 +75,7 @@ class Processor:
     """ docstring for Process. """
 
     def __init__(self):
-        self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
+        self.logger = logging.getLogger(__name__).getChild(f"{self.__class__.__name__}")
         self.logger.setLevel(logging.WARNING)
         self.regex = self.Regexer()
 
@@ -101,7 +101,7 @@ class Processor:
         """ Defines the different regexes and related functions """
 
         def __init__(self):
-            self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
+            self.logger = logging.getLogger(__name__).getChild(f"{self.__class__.__name__}")
             # TODO: finetune these regexes, maybe some can be combined?
             #  look at todo.txt to see what other rules should be added
             """
@@ -190,7 +190,7 @@ class Output:
 
     # TODO: probably a temp file first and then backup and replace the original
     def __init__(self, arg):
-        self.logger = logging.getLogger(__app__).getChild(f"{self.__class__.__name__}")
+        self.logger = logging.getLogger(__name__).getChild(f"{self.__class__.__name__}")
         self.arg = arg
 
     def write(self):

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-# noinspection PyUnresolvedReferences
-from subtproc import main
+from app import run
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    run()
